@@ -1,0 +1,2317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIxplorer - The Ultimate AI Tools Directory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 3D Effect Variables */
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #00cec9;
+            --accent: #fd79a8;
+            --background: #0f0f1a;
+            --card-bg: rgba(22, 22, 35, 0.8);
+            --text: #f5f6fa;
+            --text-secondary: #dfe6e9;
+            --perspective: 1000px;
+            --transition-speed: 0.3s;
+            --grid-column-width: minmax(250px, 1fr); /* Make grid columns consistent */
+        }
+        
+        /* Smooth scrolling for the entire page */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            perspective: var(--perspective);
+            overflow-x: hidden;
+        }
+        
+        /* Make the tool grids uniform */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, var(--grid-column-width));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        /* 3D transform for tools columns - refined for better corner behavior */
+        .tools-column {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            will-change: transform;
+            transform-origin: center center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .tools-column:hover {
+            transform: translateY(-5px) translateZ(20px);
+            box-shadow: 0 15px 35px rgba(31, 38, 135, 0.5), 0 0 15px var(--primary);
+        }
+        
+        /* 3D effect for tool items - refined for better corner behavior */
+        .tool-item {
+            transform-style: preserve-3d;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            will-change: transform;
+            transform-origin: center center;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .tool-item:hover {
+            transform: translateY(-5px) scale(1.05) translateZ(10px);
+            box-shadow: 0 0 25px rgba(0, 123, 255, 0.8);
+        }
+        
+        /* Parallax effect for particles */
+        #particles-js {
+            transform: translateZ(-10px) scale(1.1);
+        }
+        
+        /* 3D effect for the hero section */
+        .hero {
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        
+        .hero h2 {
+            transform: translateZ(50px);
+            transition: transform 0.5s ease;
+        }
+        
+        .hero p {
+            transform: translateZ(30px);
+            transition: transform 0.5s ease;
+        }
+        
+        /* 3D effect for search filter */
+        .search-filter {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        
+        .search-filter:hover {
+            transform: translateY(-5px) translateZ(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 3D button effects */
+        .cta-button, .explore-button, .tool-details-link {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .cta-button:hover, .explore-button:hover, .tool-details-link:hover {
+            transform: translateY(-5px) translateZ(20px);
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.6);
+        }
+        
+        /* 3D effect for modal */
+        .modal-content {
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+            transition: transform 0.5s ease;
+        }
+        
+        /* Enhanced modal animation */
+        @keyframes modalFadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(-50px) translateZ(-100px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) translateZ(0); 
+            }
+        }
+        
+        /* Tilt effect class */
+        .tilt-effect {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+        }
+        
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-left: 10px;
+        }
+        
+        .typing-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .typing-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 42px;
+            background-color: var(--accent);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        nav ul li a:hover {
+            color: var(--secondary);
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+        
+        .search-filter {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .search-filter:hover {
+            transform: translateY(-5px);
+        }
+        
+        .search-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .search-container input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px 0 0 10px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+        
+        .search-container button {
+            padding: 15px 25px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 0 10px 10px 0;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-container button:hover {
+            opacity: 0.9;
+        }
+        
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .filter-dropdown {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-dropdown select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 10px;
+            color: var(--text);
+            appearance: none;
+            cursor: pointer;
+        }
+        
+        .filter-dropdown::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        
+        .clear-filters {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 10px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .clear-filters:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .tools-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .column-header-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .tools-column {
+            background: rgba(28, 1, 33, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(2.5px);
+            -webkit-backdrop-filter: blur(2.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 16px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .tools-column:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 15px var(--glow-color);
+        }
+        
+        .tool-item {
+            position: relative;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .tool-item:hover {
+            transform: translateX(10px) scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.7);
+        }
+        
+        .tool-item:active {
+            transform: translateX(10px) scale(1.02);
+            box-shadow: 0 0 25px rgba(0, 123, 255, 0.9);
+        }
+        
+        .tool-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .tool-description {
+            display: none;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .tool-item:hover .tool-description {
+            display: block;
+        }
+        
+        .explore-button {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .explore-button:hover {
+            opacity: 0.9;
+        }
+        
+        .features {
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .features h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .cta {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(rgba(15, 15, 26, 0.8), rgba(15, 15, 26, 0.9)), url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485') center/cover;
+            border-radius: 20px;
+            margin: 50px 0;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .cta p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+        
+        .cta-button {
+            padding: 15px 30px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4);
+        }
+
+footer {
+    padding: 50px 0;
+            background: rgba(28, 1, 33, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(2.5px);
+            -webkit-backdrop-filter: blur(2.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--secondary);
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Updated modal styles for full screen */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Center modal content */
+        .modal-content {
+            background: rgba(28, 1, 33, 0.9);
+            width: 90%; /* Adjust width for better appearance */
+            max-width: 600px; /* Set a max width */
+            margin: 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(108, 92, 231, 0.5);
+            animation: modalFadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            display: flex; /* Use flex to center content */
+            flex-direction: column; /* Stack content vertically */
+            justify-content: center; /* Center vertically */
+            align-items: center; /* Center horizontally */
+        }
+        
+        @keyframes modalFadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(-30px) translateZ(-100px) scale(0.9); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) translateZ(0) scale(1); 
+            }
+        }
+        
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(108, 92, 231, 0.1);
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .tool-details-description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            color: var(--text);
+        }
+        
+        .tool-details-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-details-link:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .tool-details-link:hover {
+            transform: translateY(-5px) translateZ(20px);
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.6);
+        }
+        
+        .tool-details-link:hover:before {
+            left: 100%;
+        }
+        
+        /* Enhanced tool item styles */
+        .tool-item {
+            position: relative;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .tool-item:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .tool-item:hover:before {
+            opacity: 1;
+        }
+        
+        .tool-item:hover {
+            transform: translateX(10px) scale(1.05);
+            box-shadow: 0 0 25px rgba(108, 92, 231, 0.5);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .tool-item:active {
+            transform: translateX(5px) scale(1.02);
+        }
+        
+        .tool-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .tool-item:hover .tool-name {
+            transform: translateZ(10px);
+            color: var(--secondary);
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+            
+            .tool-details {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                color: var(--text);
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+        
+        /* Mobile menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background: var(--card-bg);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            padding: 50px 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .mobile-menu.active {
+            right: 0;
+        }
+        
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .mobile-menu ul {
+            list-style: none;
+            margin-top: 50px;
+        }
+        
+        .mobile-menu ul li {
+            margin-bottom: 20px;
+        }
+        
+        .mobile-menu ul li a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 1.2rem;
+            display: block;
+            padding: 10px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-menu ul li a:hover {
+            color: var(--secondary);
+            padding-left: 10px;
+        }
+        
+        /* Hide default cursor */
+        body, a, button, .tool-item, .modal-close, select, input, .filter-dropdown, .clear-filters, 
+        .search-container button, .tools-column, .tools-grid > *, .category-section, .category-header {
+            cursor: auto; /* Restore default cursor */
+        }
+        
+        /* Remove custom cursor container styles */
+        /* Custom cursor container */
+        #binary-cursor {
+            display: none;
+        }
+        
+        /* Canvas for the binary rain animation */
+        #cursor-canvas {
+            display: none;
+        }
+        
+        /* Text that appears on hover */
+        #cursor-text {
+            display: none;
+        }
+        
+        /* Cursor states */
+        #binary-cursor.clickable {
+            display: none;
+        }
+        
+        #binary-cursor.clickable #cursor-text {
+            display: none;
+        }
+        
+        /* Add pointer shape to cursor */
+        #binary-cursor:before {
+            display: none;
+        }
+        
+        /* New styles for the additional tools section */
+        .additional-tools {
+            padding: 30px 0 50px;
+            margin-top: 30px;
+        }
+        
+        /* Add a subtle separator between grid sections */
+        .hero .tools-grid {
+            margin-bottom: 40px;
+        }
+        
+        /* Add more depth between sections */
+        section.additional-tools {
+            position: relative;
+        }
+        
+        section.additional-tools:before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 10%;
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(108, 92, 231, 0.5), transparent);
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .category-title {
+            font-size: 2rem;
+            margin: 30px 0 20px;
+            color: var(--text);
+            background: linear-gradient(45deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* Enhance tool item hover effects */
+        .tool-item:hover .tool-rank {
+            color: var(--accent);
+            transform: scale(1.2);
+        }
+        
+        .tool-rank {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .tool-metric {
+            font-size: 0.9rem;
+            color: var(--accent);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-left: 10px;
+        }
+
+        /* New styles for the additional tools section */
+        .additional-tools {
+            padding: 30px 0 50px;
+            margin-top: 30px;
+        }
+        
+        /* Add a subtle separator between grid sections */
+        .hero .tools-grid {
+            margin-bottom: 40px;
+        }
+        
+        /* Add more depth between sections */
+        section.additional-tools {
+            position: relative;
+        }
+        
+        section.additional-tools:before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 10%;
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(108, 92, 231, 0.5), transparent);
+        }
+
+        /* Make sure each tools-column has consistent height */
+        .tools-column {
+            min-height: 680px; /* Set a minimum height for consistency */
+        }
+
+        /* Ensure tool items are consistent */
+        .tool-item {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            position: relative;
+            height: auto;
+            min-height: 65px; /* Ensure minimum height */
+        }
+
+
+        #toolDetailsModal {
+            position: fixed; /* Ensure the modal is fixed */
+            /* Remove centering transforms like: transform: translate(-50%, -50%); */
+        }
+
+        /* Updated styles for the search bar */
+        .search-container {
+            display: flex;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .search-container input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .search-container input:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-container button {
+            padding: 15px 25px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 0 10px 10px 0;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-container button:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .search-container input {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            .search-container button {
+                padding: 10px 15px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="typing-container">
+                    <div class="typing-text">AIxplorer</div>
+                    <span class="cursor"></span>
+                </div>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="#top">Home</a></li> <!-- Updated to scroll to top -->
+                    <li><a href="#education">Tools</a></li> <!-- Updated to scroll to Education column -->
+                    <li><a href="AI TUTORIALS.html">AI PROMPT MASTERY</a></li>
+                    <li><a href="AI Glossary.html">AI Glossary</a></li>
+                    <!-- Removed About link -->
+                </ul>
+            </nav>
+        </header>
+        
+        <!-- Removed mobile menu section -->
+        
+        <section class="hero">
+            <h2>Discover the Perfect AI Tools for Your Needs</h2>
+            <p>Explore our comprehensive directory of cutting-edge AI tools, compare features, and find the perfect solution for your specific use case.</p>
+            
+            <!-- Search Filter Section -->
+            <!-- <div class="search-filter"> -->
+            <!--     <div class="search-container"> -->
+            <!--         <input type="text" placeholder="Search for AI tools..." id="search-bar"> -->
+            <!--         <button id="search-button"><i class="fas fa-search"></i></button> -->
+            <!--     </div> -->
+            <!-- </div> -->
+        
+        <div class="tools-grid">
+            <!-- Latest AI Column -->
+            <div class="tools-column">
+                <div class="column-header">
+                    <div class="column-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m8 3 4 8 5-5 5 15H2L8 3z"/>
+                        </svg>
+                </div>
+                    <h3 class="column-header-text">Latest AI</h3>
+                    </div>
+                <ul class="tools-list">
+                    <li class="tool-item" data-description="Grok is an advanced AI tool designed for natural language processing and understanding, enabling seamless communication and content generation." data-link="https://www.grok.com/">
+                        <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">Grok</h3>
+                    </li>
+                    <li class="tool-item" data-description="Experience DiffRhythm - the first latent diffusion-based song generation model capable of synthesizing complete songs with both vocals and accompaniment for up to 4m." data-link="https://diffrhythm.ai/">
+                        <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">Diff</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered language model that provides sophisticated text generation for creative writing and business communications." data-link="https://www.jasper.ai/">
+                        <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">Jasper AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="Advanced language model with multimodal capabilities able to process and generate text, code, and respond to images." data-link="https://openai.com/gpt-4">
+                        <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">GPT-4o</h3>
+                    </li>
+                    <li class="tool-item" data-description="Anthropic's latest AI assistant that excels at complex reasoning, creative content generation, and knowledge tasks." data-link="https://claude.ai/">
+                        <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">Claude 3 Opus</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI research assistant that combines search capabilities with an AI language model to provide accurate, cited information." data-link="https://www.perplexity.ai/">
+                        <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Perplexity AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="Streamline workflows, gain clear visibility across teams, and empower smarter decisions with AI seamlessly woven into your work." data-link="https://monday.com/">
+                        <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">Monday.com</h3>
+                    </li>
+                    <li class="tool-item" data-description="A specialized AI tool for creating personalized and sophisticated email content for marketing campaigns." data-link="https://www.copy.ai/">
+                        <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">Copy.ai</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI writing assistant that helps create content with a human touch through its deep learning language model." data-link="https://rytr.me/">
+                        <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">Rytr</h3>
+                    </li>
+                    <li class="tool-item" data-description="Content creation platform using AI to generate blog posts, marketing copy, and social media content at scale." data-link="https://www.writesonic.com/">
+                        <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">Writesonic</h3>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Top 50 Trends Column -->
+            <div class="tools-column">
+                <div class="column-header">
+                    <div class="column-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+                            <polyline points="16 7 22 7 22 13"/>
+                        </svg>
+                </div>
+                    <h3 class="column-header-text">Top 10 Trends</h3>
+                    </div>
+                <ul class="tools-list">
+                    <li class="tool-item" data-description="DeepSeek R1 is an AI tool that provides advanced search capabilities, enabling users to find relevant information quickly and efficiently." data-link="https://www.deepseek.com/">
+                        <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">DeepSeek R1</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI video generation system that creates high-quality animations and visual content from 21 different AI models, perfect for creators and marketers." data-link="https://www.wan-ai.org">
+                        <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">Wan 21 AI Video</h3>
+                    </li>
+                    <li class="tool-item" data-description="Image generation AI that creates photorealistic and artistic visuals with unprecedented quality and detail." data-link="https://www.midjourney.com/">
+                        <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">MidJourney V6.1</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI platform that transforms your voice into professional voice-overs with multiple language options." data-link="https://elevenlabs.io/">
+                        <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">ElevenLabs</h3>
+                    </li>
+                    <li class="tool-item" data-description="Create diverse AI-generated music in seconds with this trending audio generation platform." data-link="https://www.suno.ai/">
+                        <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">Suno AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="Advanced AI assistant that provides detailed, cited research on any topic with real-time data." data-link="https://www.perplexity.ai/">
+                        <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Perplexity Pro</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI code assistant that speeds up development with intelligent completion and explanations." data-link="https://github.com/features/copilot">
+                        <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">GitHub Copilot</h3>
+                    </li>
+                    <li class="tool-item" data-description="Open-source AI chatbot that can be deployed locally for enhanced privacy and customization." data-link="https://lmstudio.ai/">
+                        <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">LM Studio</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI image editor that offers advanced manipulation and enhancement capabilities beyond traditional tools." data-link="https://www.ideogram.ai/">
+                        <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">Ideogram</h3>
+                    </li>
+                    <li class="tool-item" data-description="Complete AI studio for creating professional videos with virtual presenters and custom animations." data-link="https://www.synthesia.io/">
+                        <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">Synthesia</h3>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Image Generators Column -->
+            <div class="tools-column">
+                <div class="column-header">
+                    <div class="column-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                </div>
+                    <h3 class="column-header-text">Image Generators</h3>
+                    </div>
+                <ul class="tools-list">
+                    <li class="tool-item" data-description="Advanced image generation platform with photorealistic capabilities and enhanced creative control for version 6.1. Create stunning art and visuals with AI." data-link="https://www.midjourney.com/">
+                        <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">MidJourney V6.1</h3>
+                    </li>
+                    <li class="tool-item" data-description="Adobe's AI-powered image generation tool focusing on ethical and copyright-safe content creation with professional-grade quality." data-link="https://firefly.adobe.com/">
+                        <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">Adobe Firefly 3</h3>
+                    </li>
+                    <li class="tool-item" data-description="OpenAI's DALL-E 3 creates highly detailed and contextually accurate images from text descriptions with improved understanding of spatial relationships." data-link="https://openai.com/dall-e-3">
+                        <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">DALL-E 3</h3>
+                    </li>
+                    <li class="tool-item" data-description="Specialized AI image generator that excels at creating artistic typography and text-focused visual designs." data-link="https://www.ideogram.ai/">
+                        <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">Ideogram</h3>
+                    </li>
+                    <li class="tool-item" data-description="Open-source image generation model that can be used locally or via API for creating diverse visual content." data-link="https://stability.ai/stablediffusion">
+                        <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">Stable Diffusion XL</h3>
+                    </li>
+                    <li class="tool-item" data-description="Google's text-to-image AI model that creates highly detailed visuals with excellent composition and understanding of prompts." data-link="https://deepmind.google">
+                        <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Google DeepMind</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI image generator optimized for creating product images and designs for e-commerce and marketing." data-link="https://www.bing.com/create">
+                        <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">Bing Image Creator</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI art platform that specializes in transforming photos into various artistic styles and creative interpretations." data-link="https://prisma-ai.com/">
+                        <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">Prisma AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="Professional AI image generation platform focused on high-quality visual content for businesses and creative professionals." data-link="https://leonardo.ai/">
+                        <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">Leonardo.AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered creative platform for generating and editing images with intuitive controls and professional results." data-link="https://runwayml.com/">
+                        <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">Runway Gen-2</h3>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Writing & Web SEO Column -->
+            <div class="tools-column">
+                <div class="column-header">
+                    <div class="column-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                </div>
+                    <h3 class="column-header-text">Writing & Web SEO</h3>
+                    </div>
+                <ul class="tools-list">
+                    <li class="tool-item" data-description="AI-powered writing enhancement tool that helps with paraphrasing and content optimization to improve readability and engagement." data-link="https://quillbot.com/">
+                        <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">QuillBot</h3>
+                    </li>
+                    <li class="tool-item" data-description="Content creation platform that generates SEO-optimized articles and marketing materials with AI to boost organic traffic." data-link="https://www.semrush.com/apps/contentshake/">
+                        <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">ContentShake AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="Comprehensive SEO platform with AI-powered content optimization tools for improving search engine rankings." data-link="https://www.semrush.com/">
+                        <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">SEMrush</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI writing assistant that helps create blogs, social media posts, and marketing copy with SEO optimization built-in." data-link="https://www.jasper.ai/">
+                        <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">Jasper</h3>
+                    </li>
+                    <li class="tool-item" data-description="All-in-one content optimization platform that offers AI writing assistance and SEO recommendations in real-time." data-link="https://surferseo.com">
+                        <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">Surfer SEO</h3>
+                    </li>
+                    <li class="tool-item" data-description="Comprehensive AI writing tool that helps create SEO-friendly blog posts, product descriptions, and ad copy." data-link="https://www.frase.io/">
+                        <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Frase</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI content generation platform specializing in creating long-form articles that rank well in search results." data-link="https://wordai.com">
+                        <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">WordAI</h3>
+                    </li>
+                    <li class="tool-item" data-description="All-in-one SEO tool with content optimization features to help websites achieve higher search engine rankings." data-link="https://ahrefs.com/">
+                        <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">Ahrefs</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI writing assistant that helps create compelling content with SEO optimization features included." data-link="https://www.copy.ai/">
+                        <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">Copy.ai</h3>
+                    </li>
+                    <li class="tool-item" data-description="Grammar and style checking tool that uses AI to improve writing quality and readability." data-link="https://www.grammarly.com/">
+                        <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">Grammarly</h3>
+                    </li>
+                </ul>
+            </div>
+            <div class="tools-column" id="education"> <!-- Added ID here -->
+                <div class="column-header">
+                    <div class="column-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="column-header-text">Education</h3>
+                </div>
+                <ul class="tools-list">
+                    <li class="tool-item" data-description="AI research assistant that answers questions, cites sources, and generates content." data-link="https://www.perplexity.ai/">
+                        <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">Perplexity AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="Interactive AI-powered map for exploring geography and world cultures." data-link="https://earth.google.com/web/">
+                        <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">Globe Explorer AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="Chat with your PDF documents to extract information and get answers." data-link="https://www.chatpdf.com/">
+                        <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">ChatPDF</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI writing tool that helps paraphrase, grammar check, and improve text." data-link="https://quillbot.com/">
+                        <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">QuillBot</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI writing assistant integrated with Notion for drafting, editing, and summarizing." data-link="https://www.notion.so/product/ai">
+                        <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">Notion AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-enhanced learning platform with personalized course recommendations." data-link="https://www.coursera.org/">
+                        <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Coursera</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI meeting assistant that records, transcribes, and summarizes conversations." data-link="https://fireflies.ai/">
+                        <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">FireFlies</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered language translator with natural phrasing and context awareness." data-link="https://www.deepl.com/">
+                        <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">Deepl</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI highlighting tool that identifies and saves important content." data-link="https://getliner.com/">
+                        <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">Liner AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered flashcards and study materials for effective learning." data-link="https://quizlet.com/">
+                        <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">QuizLet</h3>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- AI Detection Column -->
+            <div class="tools-column">
+                <div class="column-header">
+                    <div class="column-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <h3 class="column-header-text">AI Detection</h3>
+                </div>
+                <ul class="tools-list">
+                    <li class="tool-item" data-description="Facial recognition search engine for finding online appearances." data-link="https://pimeyes.com/">
+                        <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">PimEyes</h3>
+                    </li>
+                    <li class="tool-item" data-description="Tool that makes AI-generated text undetectable by AI detectors." data-link="https://undetectable.ai/">
+                        <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">Undetectable AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="Genie is an industry leading AI-powered scam detection tool and brand-new innovation from Norton" data-link="https://in.norton.com/products/genie-scam-detector">
+                        <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">Genie Scam Detector</h3>
+                    </li>
+                    <li class="tool-item" data-description="Face verification tool for identity confirmation." data-link="https://facecheck.id/">
+                        <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">FaceCheck ID</h3>
+                    </li>
+                    <li class="tool-item" data-description="Tool that detects whether text was written by AI or human." data-link="https://gptzero.me/">
+                        <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">GPTZero</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI content detector with high accuracy for detecting AI-written text." data-link="https://originality.ai/">
+                        <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Originality AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="Free tool to check if text was generated by GPT or similar AI models." data-link="https://zerogpt.com/">
+                        <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">ZeroGPT</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered image analysis and object detection tool." data-link="https://lenso.ai/">
+                        <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">Lenso.ai</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI detection and plagiarism checker for academic and business use." data-link="https://copyleaks.com/">
+                        <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">Copyleaks</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI text detection tool with humanization features." data-link="https://textgo.ai/">
+                        <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">TextGo AI</h3>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Summarizer Column -->
+            <div class="tools-column">
+                <div class="column-header">
+                    <div class="column-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="21" y1="10" x2="3" y2="10"></line>
+                            <line x1="21" y1="6" x2="3" y2="6"></line>
+                            <line x1="21" y1="14" x2="3" y2="14"></line>
+                            <line x1="21" y1="18" x2="7" y2="18"></line>
+                        </svg>
+                    </div>
+                    <h3 class="column-header-text">Summarizer</h3>
+                </div>
+                <ul class="tools-list">
+                    <li class="tool-item" data-description="AI meeting assistant that records, transcribes, and summarizes conversations." data-link="https://fireflies.ai/">
+                        <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">FireFlies</h3>
+                    </li>
+                    <li class="tool-item" data-description="Automatic text summarization tool for condensing long documents." data-link="https://resoomer.com/">
+                        <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">Resoomer</h3>
+                    </li>
+                    <li class="tool-item" data-description="PDF summarization and analysis tool by Adobe." data-link="https://www.adobe.com/acrobat/ai.html">
+                        <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">Acrobat AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="Tool that converts video content into written blog posts." data-link="https://videotoblog.ai/">
+                        <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">Video To Blog</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI note-taking assistant that summarizes and organizes information." data-link="https://notegpt.io/">
+                        <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">NoteGPT</h3>
+                    </li>
+                    <li class="tool-item" data-description="Research paper summarization tool for academics." data-link="https://www.scholarcy.com/">
+                        <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Scholarcy</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered document chat and summarization tool." data-link="https://chatdoc.com/">
+                        <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">ChatDOC</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI tool that generates reports and summaries from various data sources." data-link="https://myreport.ai/">
+                        <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">MyReport</h3>
+                    </li>
+                    <li class="tool-item" data-description="Open-source document summarization and analysis tool." data-link="https://openread.io/">
+                        <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">OpenRead</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI meeting assistant that creates summaries and action items." data-link="https://www.cogram.com/">
+                        <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">Cogram</h3>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Productivity Column -->
+            <div class="tools-column">
+                <div class="column-header">
+                    <div class="column-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                    </div>
+                    <h3 class="column-header-text">Productivity</h3>
+                </div>
+                <ul class="tools-list">
+                    <li class="tool-item" data-description="AI-enhanced customer relationship management platform." data-link="https://www.hubspot.com/products/crm">
+                        <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">HubSpot CRM</h3>
+                    </li>
+                    <li class="tool-item" data-description="Versatile AI chatbot for content creation, problem-solving, and information." data-link="https://chat.openai.com/">
+                        <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">ChatGPT</h3>
+                    </li>
+                    <li class="tool-item" data-description="No-code automation platform for connecting apps and workflows." data-link="https://www.make.com/">
+                        <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">Make</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI presentation and document creation tool with visual templates." data-link="https://gamma.app/">
+                        <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">Gamma App</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI writing assistant integrated with Notion for drafting and editing." data-link="https://www.notion.so/product/ai">
+                        <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">Notion AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI meeting assistant that records, transcribes, and summarizes conversations." data-link="https://fireflies.ai/">
+                        <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">FireFlies</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI time management assistant for scheduling and productivity." data-link="https://www.beforesunset.ai/">
+                        <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">BeforeSunset AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-enhanced work management platform for teams and projects." data-link="https://monday.com/">
+                        <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">Monday.com</h3>
+                    </li>
+                    <li class="tool-item" data-description="Workflow automation tool connecting apps and services." data-link="https://zapier.com/">
+                        <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">Zapier</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered project management platform with task automation." data-link="https://clickup.com/">
+                        <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">ClickUp</h3>
+                    </li>
+                </ul>
+            </div>
+            <div class="tools-column">
+                <div class="column-header">
+                    <div class="column-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 15h18M3 9h18m-18 6l3-6m3 6l3-6m3 6l3-6"/>
+                        </svg>
+                    </div>
+                    <h3 class="column-header-text">Travel</h3>
+                </div>
+                <ul class="tools-list">
+                    <li class="tool-item" data-description="AI travel assistant that helps plan customized itineraries." data-link="https://www.asklayla.com/">
+                        <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">Ask Layla</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered travel planning tool for creating personalized trip itineraries." data-link="https://tripplanner.ai/">
+                        <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">Tripplanner AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI travel planning feature by TripAdvisor for creating customized itineraries." data-link="https://www.tripadvisor.com/Trips">
+                        <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">Trips by TripAdvisor</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI travel booking assistant with personalized recommendations." data-link="https://airial.travel/">
+                        <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">Airial Travel</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI travel guide providing real-time recommendations and local insights." data-link="https://www.guidegeek.com/">
+                        <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">GuideGeek</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered boat vacation planning tool for nautical trips." data-link="https://wanderboat.com/">
+                        <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Wanderboat</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI travel planner that creates detailed daily itineraries." data-link="https://wonderplan.ai">
+                        <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">Wonderplan</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered travel booking platform with price predictions." data-link="https://novae.travel/">
+                        <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">Novae.Travel</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI assistant for mindful travel planning and experiences." data-link="https://mindtrip.ai/">
+                        <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">Mindtrip AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered accommodation search and booking Application platform for Ios and Android." data-link="https://play.google.com/store/apps/details?id=com.mycelebs.staypia&hl=en_IN">
+                        <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">Staypia Mobile Application</h3>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Face Swap Column -->
+            <div class="tools-column">
+                <div class="column-header">
+                    <div class="column-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="5"/>
+                            <path d="M20 21a8 8 0 0 0-16 0"/>
+                            <line x1="15" y1="9" x2="9" y2="15"/>
+                            <line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
+        </div>
+                    <h3 class="column-header-text">Face Swap</h3>
+                </div>
+                <ul class="tools-list">
+                    <li class="tool-item" data-description="Open-source face swapping tool with advanced capabilities. Github Link is Provided!" data-link="https://facefusion.io/">
+                        <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">FaceFusion</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered face swap application for photos and videos." data-link="https://faceswapper.ai/">
+                        <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">FaceSwapper</h3>
+                    </li>
+                    <li class="tool-item" data-description="Online platform for creating deepfake videos with face swapping." data-link="https://deepfakesweb.com/">
+                        <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">DeepFakesWeb</h3>
+                    </li>
+                    <li class="tool-item" data-description="Face swap feature from the Remaker app for photos and videos." data-link="https://remaker.ai/face-swap">
+                        <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">Face Swap by Remaker</h3>
+                    </li>
+                    <li class="tool-item" data-description="Tool for swapping faces in video content with AI technology." data-link="https://www.media.io/ai-face-swap.html">
+                        <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">Video Face Swap</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered tool for creating humorous face swap GIFs." data-link="https://misgif.app">
+                        <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Misgif</h3>
+                    </li>
+                    <li class="tool-item" data-description="Open-source face swapping solution for developers." data-link="https://github.com/deepfakes/faceswap">
+                        <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">Face Swap Open</h3>
+                    </li>
+                    <li class="tool-item" data-description="Face swap feature from KreadoAI for photos and videos." data-link="https://www.kreadoai.com">
+                        <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">KreadoAI FaceSwap</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI platform for high-quality face swapping in videos and images." data-link="https://www.deepswapper.com">
+                        <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">DeepSwapper AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="Face swap service for photos and videos with AI technology." data-link="https://deepswap.ai/">
+                        <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">DeepSwap</h3>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Avatars Column -->
+                    <div class="tools-column">
+                        <div class="column-header">
+                            <div class="column-header-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            </div>
+                    <h3 class="column-header-text">Avatars</h3>
+                        </div>
+                        <ul class="tools-list">
+                    <li class="tool-item" data-description="AI-powered video generation platform with realistic digital avatars." data-link="https://www.heygen.com/">
+                                <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">HeyGen AI</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI avatar generation and animation platform." data-link="https://www.kreadoai.com">
+                                <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">Kreado AI</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI-powered avatar creator for virtual meetings and presentations." data-link="https://humva.com/">
+                                <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">Humva</h3>
+                            </li>
+                    <li class="tool-item" data-description="Google's AI-powered avatar creation tool for video content.BTW its Open Source!!" data-link="https://enriccorona.github.io/vlogger/">
+                                <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">VLOGGER by Google</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI video avatar generator for business and marketing content." data-link="https://www.vidnoz.com/">
+                                <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">Vidnoz AI</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI-powered avatar creation tool for mobile experiences." data-link="https://krikey.ai/">
+                                <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Krikey AI</h3>
+                            </li>
+                    <li class="tool-item" data-description="Face swap feature by Akool for creating personalized avatars." data-link="https://www.akool.com/face-swap">
+                                <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">Face Swap by Akool</h3>
+                            </li>
+                    <li class="tool-item" data-description="3D avatar platform for creating digital identities across apps." data-link="https://readyplayer.me/">
+                                <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">Ready Player Me</h3>
+                            </li>
+                    <li class="tool-item" data-description="Interactive AI avatar for real-time engagement and presentations." data-link="https://www.heygen.com/interactive-avatar">
+                                <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">HeyGen Interactive Avatar</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI-powered avatar platform for virtual interactions." data-link="https://www.delphidigital.ai/">
+                                <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">Delphi AI</h3>
+                            </li>
+                        </ul>
+                    </div>
+                    
+            <!-- Healthcare Column -->
+                    <div class="tools-column">
+                        <div class="column-header">
+                            <div class="column-header-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                </svg>
+                            </div>
+                    <h3 class="column-header-text">Healthcare</h3>
+                        </div>
+                        <ul class="tools-list">
+                    <li class="tool-item" data-description="AI-powered mental health chatbot for therapy and support." data-link="https://woebothealth.com/">
+                                <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">Woebot Health</h3>
+                            </li>
+                    <li class="tool-item" data-description="Visual assistance app that connects blind users with sighted volunteers." data-link="https://www.bemyeyes.com/">
+                                <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">Be My Eyes</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI medical assistant for health questions and consultations." data-link="https://yourdoctor.ai/">
+                                <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">YourDoctor AI</h3>
+                            </li>
+                    <li class="tool-item" data-description="The Cetaphil AI Skin Analysis Tool assesses your skin and provides a tailored skincare solution just for you through the power of innovative artificial intelligence (AI) skin technology." data-link="https://www.cetaphil.in/skin-analysis.html">
+                                <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">Cetaphil AI</h3>
+                            </li>
+                    <li class="tool-item" data-description=" An AI therapist available 24/7 to support you." data-link="https://healingjourney.ai/">
+                                <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">Healing Journey</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI-powered SkinCare and Skin Enhancing Routine Planner Web application " data-link="https://glow-ai.vercel.app/">
+                                <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Glow AI</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI platform for precision medicine and cancer care solutions." data-link="https://www.tempus.com/">
+                                <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">Tempus AI</h3>
+                            </li>
+                    <li class="tool-item" data-description="Ai assistant that with an easy 3-min questionnaire, Ubie's AI-powered system will generate a free report on possible causes." data-link="https://ubiehealth.com/">
+                                <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">Sugar Free</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI-powered health records platform for personalized medicine." data-link="https://www.medeloop.ai">
+                                <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">Medeloop</h3>
+                            </li>
+                    <li class="tool-item" data-description="Achieve your health goals with personalized AI coaching" data-link="https://www.copilotly.com/ai-apps/665dce4703dd3a2f03c6f142/hoku#">
+                                <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">Hoku AI</h3>
+                    </li>
+                </ul>
+            </div>
+            <div class="tools-column">
+                <div class="column-header">
+                    <div class="column-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="23 7 16 12 23 17 23 7"/>
+                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                        </svg>
+                    </div>
+                    <h3 class="column-header-text">Video Generators</h3>
+                </div>
+                <ul class="tools-list">
+                    <li class="tool-item" data-description="AI video generation platform by Google for creating realistic videos." data-link="https://console.cloud.google.com/marketplace/product/google/videointelligence.googleapis.com">
+                        <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">Veo 2 Google</h3>
+                    </li>
+                    <li class="tool-item" data-description="Advanced AI video generation tool for creative professionals." data-link="https://research.runwayml.com/gen3">
+                        <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">Gen-3 by Runway</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI video creation platform for personalized avatars and digital humans." data-link="https://www.heygen.com/">
+                        <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">HeyGen AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="Text-to-video AI generator for creating dream-like visual content." data-link="https://lumalabs.ai/">
+                        <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">Luma Dream Machine</h3>
+                    </li>
+                    <li class="tool-item" data-description="OpenAI's advanced text-to-video generation model." data-link="https://openai.com/research/video-generation">
+                        <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">Sora by OpenAI</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered video generation tool for creating professional content." data-link="https://www.klingai.com">
+                        <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Kling 1.6</h3>
+                    </li>
+                    <li class="tool-item" data-description="Tencent's video generation AI for creating high-quality videos." data-link="https://hunyuan.tencent.com/">
+                        <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">Hunyuan Video</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI video generation platform for creating custom video content." data-link="https://www.genmo.ai/">
+                        <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">Genmo AI</h3>
+                    </li>
+                    <li class="tool-item" data-description="MiniMax's AI video generation platform for realistic video creation." data-link="https://chat.minimax.io">
+                        <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">Hailuo AI (MiniMax)</h3>
+                    </li>
+                    <li class="tool-item" data-description="AI-powered video creation platform for marketing and social media." data-link="https://invideo.io/">
+                        <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">InVideo</h3>
+                            </li>
+                        </ul>
+                    </div>
+                    
+            <!-- Human Resources Column -->
+                    <div class="tools-column">
+                        <div class="column-header">
+                            <div class="column-header-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                            </div>
+                    <h3 class="column-header-text">Human Resources</h3>
+                        </div>
+                        <ul class="tools-list">
+                    <li class="tool-item" data-description="AI-powered job application assistant for tailoring applications." data-link="https://aiapply.io/">
+                                <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">AIApply</h3>
+                            </li>
+                    <li class="tool-item" data-description="Remote job platform with AI matching for remote workers." data-link="https://www.people.ai">
+                                <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">RemotePeople</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI job application assistant for tailoring resumes and cover letters." data-link="https://jobcopilot.com/?">
+                                <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">JobCopilot</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI-enhanced HR and workplace management platform." data-link="https://workleap.com/">
+                                <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">Workleap</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI-powered resume builder with optimization features." data-link="https://www.teal.com/resume-builder">
+                                <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">Teal Resume Builder</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI resume builder with templates and optimization tools." data-link="https://www.kickresume.com/">
+                                <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Kickresume</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI-powered resume and LinkedIn profile optimization tool." data-link="https://resumeworded.com/">
+                                <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">Resume Worded</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI career advisor for job search and professional development." data-link="https://www.careerflow.ai/">
+                                <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">AI Career Coach</h3>
+                            </li>
+                    <li class="tool-item" data-description="Free AI resume creation service with ATS optimization." data-link="https://leetresumes.com/">
+                                <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">Leet Resumes</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI-powered job application assistance platform." data-link="https://www.careerflow.ai/">
+                                <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">Careerflow</h3>
+                            </li>
+                        </ul>
+                    </div>
+                    
+            <!-- Architect Column -->
+                    <div class="tools-column">
+                        <div class="column-header">
+                            <div class="column-header-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="3" y1="9" x2="21" y2="9"/>
+                                    <line x1="9" y1="21" x2="9" y2="9"/>
+                                </svg>
+                            </div>
+                    <h3 class="column-header-text">Architect</h3>
+                        </div>
+                        <ul class="tools-list">
+                    <li class="tool-item" data-description="AI interior design platform for room visualization and redesign." data-link="https://interiorai.com/">
+                                <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">Interior AI</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI platform for reimagining home interiors with different styles." data-link="https://www.reimaginehome.ai/">
+                                <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">REimagine Home</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI floor plan generator for architectural design." data-link="https://getfloorplan.com/">
+                                <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">GetFloorPlan</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI tool for planning and visualizing room layouts." data-link="https://airoomplanner.com">
+                                <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">AI Room Planner</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI platform for architectural rendering and visualization." data-link="https://rerenderai.com">
+                                <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">ReRender AI</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI tool for space planning and interior design." data-link="https://www.spacely.ai/">
+                                <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">Spacely AI</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI architectural visualization and design platform." data-link="https://varys.ai/">
+                                <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">Varys AI</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI platform for creating modern architectural visualizations." data-link="https://modernrealty.co.in">
+                                <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">Modern Reality</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI architectural design assistant for creating building plans." data-link="https://www.archivinci.com">
+                                <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">ArchiVinci</h3>
+                            </li>
+                    <li class="tool-item" data-description="AI architectural design platform for generating building models." data-link="https://maket.ai/">
+                                <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">Maket</h3>
+                            </li>
+                        </ul>
+                    </div>
+
+            <!-- LLM Models Column -->
+            <div class="tools-column">
+                <div class="column-header">
+                    <div class="column-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="12" rx="2" ry="2"></rect>
+                            <circle cx="9" cy="9" r="2"></circle>
+                            <circle cx="15" cy="9" r="2"></circle>
+                            <line x1="8" y1="16" x2="16" y2="16"></line>
+                            <line x1="12" y1="16" x2="12" y2="20"></line>
+                            <line x1="9" y1="20" x2="15" y2="20"></line>
+                        </svg>
+                    </div>
+                    <h3 class="column-header-text">LLM Models</h3>
+                </div>
+                <ul class="tools-list">
+                    <li class="tool-item" data-description="xAI's latest large language model with advanced reasoning capabilities." data-link="https://x.ai/">
+                        <div class="tool-rank">1.</div>
+                        <h3 class="tool-name">Grok-3</h3>
+                    </li>
+                    <li class="tool-item" data-description="Alibaba's advanced large language model for complex tasks." data-link="https://qianwen.aliyun.com/">
+                        <div class="tool-rank">2.</div>
+                        <h3 class="tool-name">Qwen2.5-Max</h3>
+                    </li>
+                    <li class="tool-item" data-description="DeepSeek's reasoning-focused large language model." data-link="https://deepseek.com/">
+                        <div class="tool-rank">3.</div>
+                        <h3 class="tool-name">DeepSeek-R1</h3>
+                    </li>
+                    <li class="tool-item" data-description="Anthropic's reasoning-capable large language model." data-link="https://www.anthropic.com/claude">
+                        <div class="tool-rank">4.</div>
+                        <h3 class="tool-name">Claude 3.7 Sonnet</h3>
+                    </li>
+                    <li class="tool-item" data-description="Google's advanced multimodal large language model." data-link="https://gemini.google.com/">
+                        <div class="tool-rank">5.</div>
+                        <h3 class="tool-name">Gemini 2.0</h3>
+                    </li>
+                    <li class="tool-item" data-description="OpenAI's updated GPT model with enhanced capabilities." data-link="https://chat.openai.com/">
+                        <div class="tool-rank">6.</div>
+                        <h3 class="tool-name">ChatGPT 4.5</h3>
+                    </li>
+                    <li class="tool-item" data-description="OpenAI's specialized large language model for reasoning." data-link="https://openai.com/research/">
+                        <div class="tool-rank">7.</div>
+                        <h3 class="tool-name">OpenAI o1</h3>
+                    </li>
+                    <li class="tool-item" data-description="DeepSeek's vision-language multimodal model." data-link="https://deepseek.com/">
+                        <div class="tool-rank">8.</div>
+                        <h3 class="tool-name">DeepSeek-VL2</h3>
+                    </li>
+                    <li class="tool-item" data-description="OpenAI's next-generation large language model." data-link="https://openai.com/research/">
+                        <div class="tool-rank">9.</div>
+                        <h3 class="tool-name">o3 by OpenAI</h3>
+                    </li>
+                    <li class="tool-item" data-description="Meta's professional-grade 7B parameter language model." data-link="https://huggingface.co/meta-llama">
+                        <div class="tool-rank">10.</div>
+                        <h3 class="tool-name">Meta Llama 3.1</h3>
+                    </li>
+                </ul>
+                </div>
+            </div>
+        </section>
+        
+    <footer>
+            <div class="footer-content">
+                    <h3>About Us</h3>
+                    <p>AIxplorer is your ultimate guide to the world of AI tools. We provide comprehensive reviews, comparisons, and insights to help you find the best AI tools for your needs.</p>
+                </div>
+            <div class="copyright">
+                <p>&copy; 2025 AIxplorer. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Tool Detail Modal -->
+    <div class="modal" id="toolDetailsModal">
+        <div class="modal-content" id="modalContent">
+            <span class="modal-close">&times;</span>
+            <div class="modal-header">
+                <h2 class="tool-details-title" id="modalToolName">Tool Name</h2>
+            </div>
+            <div class="modal-body">
+                <p class="tool-details-description" id="modalToolDescription">Tool description will appear here...</p>
+                <a href="#" class="tool-details-link" id="modalToolLink" target="_blank">
+                    <span>Visit Website</span>
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+                    </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Particles.js configuration
+        particlesJS("particles-js", {
+            particles: {
+                number: {
+                    value: 80,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: "#6c5ce7"
+                },
+                shape: {
+                    type: "circle",
+                    stroke: {
+                        width: 0,
+                        color: "#000000"
+                    },
+                    polygon: {
+                        nb_sides: 5
+                    }
+                },
+                opacity: {
+                    value: 0.5,
+                    random: false,
+                    anim: {
+                        enable: false,
+                        speed: 1,
+                        opacity_min: 0.1,
+                        sync: false
+                    }
+                },
+                size: {
+                    value: 3,
+                    random: true,
+                    anim: {
+                        enable: false,
+                        speed: 40,
+                        size_min: 0.1,
+                        sync: false
+                    }
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: "#6c5ce7",
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: "none",
+                    random: false,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false,
+                    attract: {
+                        enable: false,
+                        rotateX: 600,
+                        rotateY: 1200
+                    }
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: "grab"
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: "push"
+                    },
+                    resize: true
+                },
+                modes: {
+                    grab: {
+                        distance: 140,
+                        line_linked: {
+                            opacity: 1
+                        }
+                    },
+                    bubble: {
+                        distance: 400,
+                        size: 40,
+                        duration: 2,
+                        opacity: 8,
+                        speed: 3
+                    },
+                    repulse: {
+                        distance: 200,
+                        duration: 0.4
+                    },
+                    push: {
+                        particles_nb: 4
+                    },
+                    remove: {
+                        particles_nb: 2
+                    }
+                }
+            },
+            retina_detect: true
+        });
+        
+        // Typing effect
+        const text = "AIxplorer";
+        const typingText = document.querySelector('.typing-text');
+        let i = 0;
+        
+        function typeWriter() {
+            if (i < text.length) {
+                typingText.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 150);
+            }
+        }
+        
+        // Clear text first
+        typingText.textContent = '';
+        // Start typing effect
+        typeWriter();
+        
+        // Updated modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const toolItems = document.querySelectorAll('.tool-item');
+            const modal = document.getElementById('toolDetailsModal');
+            const modalContent = document.getElementById('modalContent');
+            const modalTitle = document.getElementById('modalToolName');
+            const modalDescription = document.getElementById('modalToolDescription');
+            const modalLink = document.getElementById('modalToolLink');
+            const modalClose = document.querySelector('.modal-close');
+            
+            let lastClickedTool; // Variable to store the last clicked tool item
+            
+            function openToolModal(toolName, description, link, toolItem) {
+                // Set content
+                modalTitle.textContent = toolName;
+                modalDescription.textContent = description || "Detailed information about this tool is not available.";
+                modalLink.href = link || "#";
+                
+                // Show modal
+                modal.style.display = 'flex';
+                
+                // Reset any previous transforms
+                modalContent.style.transform = '';
+                modalContent.style.opacity = '1';
+                
+                // 3D effect on open
+                setTimeout(() => {
+                    modalContent.style.transform = 'translateZ(50px)';
+                }, 100);
+                
+                // Scroll to the "Visit Website" button
+                const visitButton = modalLink; // Reference to the button
+                visitButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Store the last clicked tool item
+                lastClickedTool = toolItem;
+            }
+            
+            toolItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const toolName = this.querySelector('.tool-name').textContent;
+                    const description = this.getAttribute('data-description');
+                    const link = this.getAttribute('data-link') || "#";
+                    openToolModal(toolName, description, link, this); // Pass the clicked item
+                });
+            });
+            
+            modalClose.addEventListener('click', closeModal);
+            
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && modal.style.display === 'flex') {
+                    closeModal();
+                }
+            });
+        });
+        
+        function closeModal() {
+            const modal = document.getElementById('toolDetailsModal');
+            modal.style.display = 'none';
+            
+            // Scroll back to the last clicked tool item
+            if (lastClickedTool) {
+                lastClickedTool.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            document.body.style.overflow = 'auto'; // Restore scroll
+        }
+        
+        // Filter functionality
+        const clearFiltersBtn = document.querySelector('.clear-filters');
+        const filterSelects = document.querySelectorAll('.filter-dropdown select');
+        
+        clearFiltersBtn.addEventListener('click', () => {
+            filterSelects.forEach(select => {
+                select.selectedIndex = 0;
+            });
+            // Here you would also reset the displayed tools
+        });
+        
+        // Tilt effect for cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const tiltElements = document.querySelectorAll('.tools-column, .tool-item');
+            
+            tiltElements.forEach(element => {
+                element.addEventListener('mousemove', handleTilt);
+                element.addEventListener('mouseleave', resetTilt);
+            });
+            
+            function handleTilt(e) {
+                const card = this;
+                const cardRect = card.getBoundingClientRect();
+                const cardCenterX = cardRect.left + cardRect.width / 2;
+                const cardCenterY = cardRect.top + cardRect.height / 2;
+                
+                // Calculate mouse position relative to card center
+                const mouseX = e.clientX - cardCenterX;
+                const mouseY = e.clientY - cardCenterY;
+                
+                // Calculate rotation (with reduced sensitivity for corners)
+                const maxRotation = 5; // Limit maximum rotation to 5 degrees
+                const rotateY = Math.min(Math.max(mouseX * 0.03, -maxRotation), maxRotation);
+                const rotateX = Math.min(Math.max(-mouseY * 0.03, -maxRotation), maxRotation);
+                
+                // Apply transform with easing
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+            }
+            
+            function resetTilt() {
+                this.style.transform = '';
+            }
+        });
+        
+        // Parallax scrolling effect
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.pageYOffset;
+            
+            // Parallax for hero section
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                const heroElements = hero.querySelectorAll('h2, p');
+                heroElements.forEach((el, index) => {
+                    const speed = 0.1 * (index + 1);
+                    el.style.transform = `translateZ(${50 - scrollPosition * speed}px)`;
+                });
+            }
+            
+            // Parallax for tools grid
+            const toolsGrid = document.querySelector('.tools-grid');
+            if (toolsGrid) {
+                toolsGrid.style.transform = `translateY(${scrollPosition * 0.05}px)`;
+            }
+        });
+
+        // JavaScript to filter tools based on search input
+        const searchBar = document.getElementById('search-bar');
+        const toolItems = document.querySelectorAll('.tool-item');
+
+        searchBar.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            let found = false; // Flag to check if any tool is found
+            toolItems.forEach(item => {
+                const toolName = item.querySelector('.tool-name').textContent.toLowerCase();
+                if (toolName.includes(searchTerm)) {
+                    item.style.display = 'block'; // Show matching tool
+                    if (!found) {
+                        item.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll to the first match
+                        found = true; // Set flag to true
+                    }
+                } else {
+                    item.style.display = 'none'; // Hide non-matching tool
+                }
+            });
+        });
+    </script>
+</body>
+</html>
